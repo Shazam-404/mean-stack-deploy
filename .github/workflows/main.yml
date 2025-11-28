@@ -1,0 +1,66 @@
+name: My Deployment Pipeline
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      # Step 1: Get the code from GitHub
+      - name: Check out my code
+        uses: actions/checkout@v2
+
+      # Step 2: Login to Docker Hub so we can upload images
+      - name: Login to Docker Hub
+        run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
+
+      # Step 3: Build the images and send them to Docker Hub
+      - name: Build and Push Docker Images
+        run: |
+          docker build -t ${{ secrets.DOCKER_USERNAME }}/mean-backend:latest ./backend
+          docker build -t ${{ secrets.DOCKER_USERNAME }}/mean-frontend:latest ./frontend
+          docker push ${{ secrets.DOCKER_USERNAME }}/mean-backend:latest
+          docker push ${{ secrets.DOCKER_USERNAME }}/mean-frontend:latest
+
+      # Step 4: Connect to the Google Cloud VM and run the app
+      - name: SSH into VM and Deploy
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_KEY }}
+          script: |
+            # Stop any existing containers
+            docker-compose down
+
+            # Create the docker-compose.yml and to check current status i am using echo commands
+            echo "version: '3.8'" > docker-compose.yml
+            echo "services:" >> docker-compose.yml
+            
+            echo "  mongo:" >> docker-compose.yml
+            echo "    image: mongo:latest" >> docker-compose.yml
+            echo "    volumes:" >> docker-compose.yml
+            echo "      - mongo-data:/data/db" >> docker-compose.yml
+            
+            echo "  backend:" >> docker-compose.yml
+            echo "    image: ${{ secrets.DOCKER_USERNAME }}/mean-backend:latest" >> docker-compose.yml
+            echo "    ports:" >> docker-compose.yml
+            echo "      - '8080:8080'" >> docker-compose.yml
+            echo "    depends_on:" >> docker-compose.yml
+            echo "      - mongo" >> docker-compose.yml
+
+            echo "  frontend:" >> docker-compose.yml
+            echo "    image: ${{ secrets.DOCKER_USERNAME }}/mean-frontend:latest" >> docker-compose.yml
+            echo "    ports:" >> docker-compose.yml
+            echo "      - '80:80'" >> docker-compose.yml
+            echo "    depends_on:" >> docker-compose.yml
+            echo "      - backend" >> docker-compose.yml
+
+            echo "volumes:" >> docker-compose.yml
+            echo "  mongo-data:" >> docker-compose.yml
+
+            # Now start the app
+            docker-compose pull
+            docker-compose up -d
