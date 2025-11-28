@@ -2,7 +2,7 @@
 
 This repository contains a full-stack MEAN (MongoDB, Express, Angular, Node.js) application that has been containerized and automated for cloud deployment. This project was completed as part of the selection process for the DevOps Engineer Intern role.
 
-## 🏗 Infrastructure & Architecture
+## Infrastructure & Architecture
 The application is designed as a microservices-style architecture running on **Google Cloud Platform (GCP)**. It consists of three main containers orchestrated via Docker Compose:
 
 1.  **Frontend (Angular + Nginx):**
@@ -14,7 +14,7 @@ The application is designed as a microservices-style architecture running on **G
 3.  **Database (MongoDB):**
     * A dedicated MongoDB container with a persistent volume to ensure data safety across restarts.
 
-## 🚀 Step-by-Step Setup & Deployment
+## Step-by-Step Setup & Deployment
 
 ### 1. Running Locally
 I have configured the project so it can be run instantly on any machine with Docker, without needing to install Node.js or MongoDB locally.
@@ -38,7 +38,7 @@ I implemented a complete CI/CD pipeline using **GitHub Actions** to automate the
 * **Push Phase:** Images are tagged and pushed to **Docker Hub**.
 * **Deploy Phase:** The action connects to the GCP Virtual Machine via SSH, pulls the latest images, and restarts the containers using Docker Compose.
 
-## 📸 Screenshots
+##  Screenshots
 
 ### 1. Application UI
 *The application running live on the GCP VM (Port 80).*
@@ -54,9 +54,4 @@ I implemented a complete CI/CD pipeline using **GitHub Actions** to automate the
 
 ### 4. Nginx & Infrastructure Status
 *Terminal output (`docker ps`) showing the Nginx frontend, Backend
-
-vishnu_yakkaluri2003@v8c:~$ docker ps
-CONTAINER ID   IMAGE                                  COMMAND                  CREATED         STATUS         PORTS                                         NAMES
-90e9c9efa5a9   vishnuyakkaluri/mean-frontend:latest   "/docker-entrypoint.…"   4 minutes ago   Up 4 minutes   0.0.0.0:80->80/tcp, [::]:80->80/tcp           vishnu_yakkaluri2003_frontend_1
-b5e3856d573f   vishnuyakkaluri/mean-backend:latest    "docker-entrypoint.s…"   4 minutes ago   Up 4 minutes   0.0.0.0:8080->8080/tcp, [::]:8080->8080/tcp   vishnu_yakkaluri2003_backend_1
-b7adae2a5b30   mongo:latest                           "docker-entrypoint.s…"   4 minutes ago   Up 4 minutes   27017/tcp                                     vishnu_yakkaluri2003_mongo_1
+![Nginx_ps](https://github.com/user-attachments/assets/9a3f8d86-605c-44de-9bef-38217a3d250f)
