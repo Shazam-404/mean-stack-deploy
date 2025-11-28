@@ -13,6 +13,6 @@ FROM nginx:alpine
 RUN rm /etc/nginx/conf.d/default.conf
 
 COPY nginx.conf /etc/nginx/conf.d/default.conf
-COPY --from=build /app/dist/Angular15-CRUD /usr/share/nginx/html
+COPY --from=build /app/dist/mean-stack-deploy /usr/share/nginx/html
 EXPOSE 80
 CMD ["nginx", "-g", "daemon off;"]
