@@ -22,7 +22,7 @@ I have configured the project so it can be run instantly on any machine with Doc
 1.  **Clone the repository:**
     ```bash
     git clone [https://github.com/Shazam-404/mean-stack-deploy.git]
-    cd mean-devops-task
+    cd mean-stack-deploy
     ```
 2.  **Start the application:**
     ```bash
